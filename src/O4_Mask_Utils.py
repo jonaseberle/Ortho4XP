@@ -737,6 +737,8 @@ def blur_mask(img_array, tile, sea_level):
         # First the transition at the shore
         # We go from shore_level to sea_level in transin meters
         stepsin = int(transin / 3)
+
+        UI.vprint(2, "   mask shore ", str(stepsin), " steps")
         for i in range(stepsin):
             value = shore_level + transition_profile(
                 (i + 1) / stepsin, "parabolic"
@@ -751,10 +753,12 @@ def blur_mask(img_array, tile, sea_level):
                 > 0
             ).astype(numpy.uint8) * 255
             b_img_array[(b_img_array == 0) * (b_mask_array != 0)] = value
-            UI.vprint(2, value)
+            #UI.vprint(2, i, value)
         # Next the intermediate zone at constant transparency
         sea_b_radius = midzone / 3
         sea_b_radius_buffered = (midzone + transout) / 3
+
+        UI.vprint(2, "   mask mid")
         b_mask_array = (
             numpy.array(
                 Image.fromarray(b_mask_array)
@@ -781,6 +785,7 @@ def blur_mask(img_array, tile, sea_level):
         # Finally the transition to the X-Plane sea
         # We go from sea_level to 0 in transout meters
         stepsout = int(transout / 3)
+        UI.vprint(2, "   mask sea ", str(stepsout), " steps")
         for i in range(stepsout):
             value = sea_level * (
                 1 - transition_profile((i + 1) / stepsout, "linear")
@@ -795,9 +800,11 @@ def blur_mask(img_array, tile, sea_level):
                 > 0
             ).astype(numpy.uint8) * 255
             b_img_array[(b_img_array == 0) * (b_mask_array != 0)] = value
-            UI.vprint(2, value)
+            #UI.vprint(2, i, value)
         # To smoothen the thresolding introduced above we do a global short 
         # extent gaussian blur
+
+        #UI.vprint(2, "   mask blur")
         b_img_array = numpy.array(
             Image.fromarray(b_img_array)
             .convert("L")
