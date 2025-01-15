@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import inspect
 
 import O4_File_Names as FNAMES
 
@@ -31,7 +32,9 @@ def progress_bar(nbr, percentage, message=None):
 ################################################################################
 def vprint(min_verbosity, *args):
     if verbosity >= min_verbosity:
-        print(*args)
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        print(calframe[1][3], *args)
 
 
 ################################################################################
