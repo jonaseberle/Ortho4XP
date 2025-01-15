@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import inspect
 
 Ortho4XP_dir = ".." if getattr(sys, "frozen", False) else "."
 verbosity = 1
@@ -19,7 +20,9 @@ def progress_bar(nbr, percentage, message=None):
 ################################################################################
 def vprint(min_verbosity, *args):
     if verbosity >= min_verbosity:
-        print(*args)
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
+        print(calframe[1][3], *args)
 
 
 ################################################################################
