@@ -348,6 +348,9 @@ class DEM:
 
 ################################################################################
 def build_combined_raster(source, lat, lon, info_only):
+    world_tiles = numpy.array(
+        Image.open(os.path.join(FNAMES.Utils_dir, "world_tiles.png"))
+    )
     if source in ("View", "SRTM"):
         base = 3601
         overlap = 1
@@ -376,7 +379,9 @@ def build_combined_raster(source, lat, lon, info_only):
         verbose = True if (lat0 == lat and lon0 == lon) else False
         x = (180 + lon0) % 360
         y = 89 - lat0
-        if ensure_elevation(source, lat0, (lon0 + 180) % 360 - 180, verbose):
+        if not world_tiles[y, x]:
+            tmparray = numpy.zeros((base, base), dtype=numpy.float32)
+        elif ensure_elevation(source, lat0, (lon0 + 180) % 360 - 180, verbose):
             tmparray = read_elevation_from_file(
                 FNAMES.elevation_data(source, lat0, (lon0 + 180) % 360 - 180),
                 lat0,
