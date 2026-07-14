@@ -27,7 +27,12 @@ cfg_app_vars = {
         "type": int,
         "default": 1,
         "values": (0, 1, 2, 3),
-        "hint": "Determines which temporary files are removed. Level 3 erases everything except the config and what is needed for X-Plane; Level 2 erases everything except what is needed to redo the current step only; Level 1 allows you to redo any prior step; Level 0 keeps every single file.",
+        "hint": "Determines which temporary files are removed.\n\n"
+        "Level 0 - keep everything. No file is ever removed.\n\n"
+        "Level 1 - redo any prior step. After Step 2 (mesh) only: deletes .weight, next-iterate .node and next-iterate .ele (Triangle4XP's raw solver output, superseded by the final .mesh file). Kept: .alt, .node, .poly (mesh inputs), .mesh, .apt, all textures/terrain - so Step 1, 2, 3 or 4 can all be rerun from what is on disk.\n\n"
+        "Level 2 - redo current step only. Everything from level 1, plus, after Step 4 (tile build) completes: deletes .alt, .node, .poly (the mesh inputs - no longer needed since the mesh is already baked into .mesh), deletes any .dds in textures/ no longer referenced by a .ter file, and clears stray .png previews from textures/ at the start of Step 4. Kept: .mesh, .apt, DSF and all currently-used textures/terrain - enough to redo Step 4 again, but not Step 2.\n\n"
+        "Level 3 - everything except config + what X-Plane needs. Everything from level 2, plus: in Step 2 also deletes .alt, .node, .poly right after the mesh is built (so even just rerunning Step 2 alone destroys its own inputs), and in Step 4 also deletes .mesh and .apt after the DSF is finalized. Kept: only the DSF (Earth nav data/*.dsf), .ter terrain files and the .dds textures actually referenced - i.e. exactly what X-Plane needs at runtime, plus the config.\n\n"
+        "Practical note: if you plan to iterate on mesh parameters, use level 0 or 1. Levels 2/3 are for finished tiles where you just want disk space back.",
     },
     "overpass_server_choice": {
         "module": "OSM",
