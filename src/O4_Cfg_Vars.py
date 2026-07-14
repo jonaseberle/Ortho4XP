@@ -336,7 +336,17 @@ cfg_tile_vars = {
     "use_decal_on_terrain": {
         "type": bool,
         "default": False,
-        "hint": "Terrain files for all but water triangles will contain the maquify_1_green_key.dcl decal directive. The effect is noticeable at very low altitude and helps to overcome the orthophoto blur at such levels. Can be slightly distracting at higher altitude.",
+        "hint": "Terrain files for land triangles will contain the maquify_2_green_key.dcl decal directive. The effect is noticeable at very low altitude and helps to overcome the orthophoto blur at such levels. Can be slightly distracting at higher altitude.",
+    },
+    "use_decal_on_inlandwater": {
+        "type": bool,
+        "default": False,
+        "hint": "Terrain files for inland water triangles will contain the maquify_2_green_key.dcl decal directive, like use_decal_on_terrain does for land triangles.",
+    },
+    "use_decal_on_sea": {
+        "type": bool,
+        "default": False,
+        "hint": "Terrain files for sea triangles (those carrying the water masks) will contain the maquify_2_green_key.dcl decal directive, like use_decal_on_terrain does for land triangles.",
     },
     # Other
     "custom_dem": {
@@ -434,6 +444,8 @@ list_dsf_vars = [
     "normal_map_strength",
     "terrain_casts_shadows",
     "use_decal_on_terrain",
+    "use_decal_on_inlandwater",
+    "use_decal_on_sea",
 ]
 
 list_other_vars = ["custom_dem", "fill_nodata"]
